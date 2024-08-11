@@ -1,0 +1,46 @@
+create blog_post content:
+  title: "Create Blog Post"
+  description: "Allows the user to create blog posts."
+  restrict access: true
+
+edit own blog_post content:
+  title: "Edit Own Blog Post"
+  description: "Allows the user to edit their own blog posts."
+  restrict access: true
+
+administer blog posts:
+  title: "Administer Blog Posts"
+  description: "Allows the user to approve, reject, and manage blog posts."
+  restrict access: true
+
+administer users:
+  title: "Administer Users"
+  description: "Allows the user to create, edit, and suspend user accounts."
+  restrict access: true
+
+manage blog_post publish date:
+  title: "Manage Blog Post Publish Date"
+  description: "Allows the user to set and manage the publish date for blog posts."
+  restrict access: true
+
+view own unpublished content:
+  title: "View own unpublished content"
+  description: "Allows the user to preview their own blog posts before publishing."
+  restrict access: true
+
+transition blog_post to ready_to_publish:
+  title: "Transition Blog Post to Ready to Publish"
+  description: "Allows the user to transition a blog post to Ready to Publish."
+  restrict access: true
+
+administer users:
+  title: "Administer users"
+  description: "Allows the user to manage user accounts."
+  restrict access: true
+
+administer blog:
+  title: "Administer view posts"
+  description: "Allows the user to manage blog posts and view all posts from all editors."
+  restrict access: true
+
+

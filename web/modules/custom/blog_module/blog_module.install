@@ -1,0 +1,126 @@
+<?php
+
+use Drupal\workflows\Entity\Workflow;
+
+/**
+ * Implements hook_install().
+ */
+function blog_module_install()
+{
+    // Create Blog Post content type
+    $content_type = \Drupal\node\Entity\NodeType::create([
+        'type' => 'blog_post',
+        'name' => 'Blog Post',
+    ]);
+    $content_type->save();
+
+    // Modify the title field label (optional)
+    $title_field = \Drupal\field\Entity\FieldConfig::loadByName('node', 'blog_post', 'title');
+    if ($title_field) {
+        $title_field->setLabel('Blog Title');
+        $title_field->save();
+    }
+
+    // Add Banner Image field
+    \Drupal\field\Entity\FieldStorageConfig::create([
+        'field_name' => 'field_banner_image',
+        'entity_type' => 'node',
+        'type' => 'image',
+        'settings' => [
+            'file_extensions' => 'jpg png gif',
+            'max_filesize' => '5120 KB',
+        ],
+        'bundle' => 'blog_post',
+    ])->save();
+
+    // Add Content field with rich text editor
+    $content_field = \Drupal\field\Entity\FieldStorageConfig::create([
+        'field_name' => 'field_content',
+        'entity_type' => 'node',
+        'type' => 'text_long',
+        'bundle' => 'blog_post',
+    ]);
+    $content_field->save();
+
+    // Configure the field to use a rich text editor by default
+    \Drupal\field\Entity\FieldConfig::create([
+        'field_storage' => $content_field,
+        'bundle' => 'blog_post',
+        'field_name' => 'field_content',
+        'label' => 'Content',
+        'settings' => [
+            'text_processing' => 1,  // Enable text processing
+        ],
+        'default_value' => [
+            'value' => '',
+            'format' => 'basic_html',  // Set the text format to Basic HTML (which has a WYSIWYG editor)
+        ],
+    ])->save();
+
+    // Create Admin role
+    $admin_role = \Drupal\user\Entity\Role::create([
+        'id' => 'admin',
+        'label' => 'Admin',
+    ]);
+    $admin_role->grantPermission('administer content types');
+    $admin_role->grantPermission('bypass node access');
+    $admin_role->grantPermission('administer users');
+    $admin_role->grantPermission('create blog_post content');
+    $admin_role->grantPermission('edit any blog_post content');
+    $admin_role->grantPermission('delete any blog_post content');
+    $admin_role->save();
+
+    // Create Editor role
+    $editor_role = \Drupal\user\Entity\Role::create([
+        'id' => 'editor',
+        'label' => 'Editor',
+    ]);
+    $editor_role->grantPermission('create blog_post content');
+    $editor_role->grantPermission('edit own blog_post content');
+    $editor_role->grantPermission('view own unpublished content');
+    $editor_role->save();
+}
+
+/**
+ * Creates the workflow for the blog module.
+ */
+function blog_module_create_workflow()
+{
+    $workflow = Workflow::create([
+        'id' => 'blog_post_workflow',
+        'label' => 'Blog Post Workflow',
+        'type_settings' => [
+            'states' => [
+                'draft' => ['label' => 'Draft'],
+                'ready_to_publish' => ['label' => 'Ready to Publish'],
+                'rejected' => ['label' => 'Rejected'],
+                'published' => ['label' => 'Published'],
+                'archived' => ['label' => 'Archived'],
+            ],
+            'transitions' => [
+                'submit_for_review' => [
+                    'label' => 'Submit for Review',
+                    'from' => ['draft'],
+                    'to' => 'ready_to_publish',
+                ],
+                'publish' => [
+                    'label' => 'Publish',
+                    'from' => ['ready_to_publish'],
+                    'to' => 'published',
+                ],
+                'reject' => [
+                    'label' => 'Reject',
+                    'from' => ['ready_to_publish'],
+                    'to' => 'rejected',
+                ],
+                'archive' => [
+                    'label' => 'Archive',
+                    'from' => ['published'],
+                    'to' => 'archived',
+                ],
+            ],
+        ],
+    ]);
+    $workflow->save();
+}
+

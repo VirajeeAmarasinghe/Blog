@@ -1,0 +1,57 @@
+blog_module.admin:
+  path: "/admin/blog/manage"
+  defaults:
+    _controller: '\Drupal\blog_module\Controller\AdminController::manage'
+    _title: "Manage Blog Posts"
+  requirements:
+    _permission: "administer blog posts"
+
+blog_module.editor_posts:
+  path: "/editor/posts"
+  defaults:
+    _controller: '\Drupal\blog_module\Controller\BlogController::editorPosts'
+    _title: "My Blog Posts"
+  requirements:
+    _permission: "edit own blog_post content"
+
+blog_module.preview:
+  path: "/blog/preview/{node}"
+  defaults:
+    _controller: '\Drupal\blog_module\Controller\BlogController::preview'
+    _title: "Preview Blog Post"
+  requirements:
+    _permission: "view own unpublished content"
+    node: \d+
+
+blog_module.user_listing:
+  path: "/admin/user-listing"
+  defaults:
+    _controller: '\Drupal\blog_module\Controller\UserController::listing'
+    _title: "User Listing"
+  requirements:
+    _permission: "administer users"
+
+blog_module.user_add:
+  path: "/admin/add-editor"
+  defaults:
+    _form: '\Drupal\blog_module\Form\AddEditorForm'
+    _title: "Add New Editor"
+  requirements:
+    _permission: "administer users"
+
+blog_module.user_suspend:
+  path: "/admin/user/suspend/{user}"
+  defaults:
+    _controller: '\Drupal\blog_module\Controller\UserController::suspend'
+    _title: "Suspend User"
+  requirements:
+    _permission: "administer users"
+    user: \d+
+
+blog_module.admin_blog_post_listing:
+  path: "/admin/blog-posts"
+  defaults:
+    _controller: '\Drupal\blog_module\Controller\AdminBlogPostListingController::viewAllPosts'
+    _title: "All Blog Posts"
+  requirements:
+    _permission: "administer blog"

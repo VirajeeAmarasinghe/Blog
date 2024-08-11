@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * Implements hook_help().
+ */
+function blog_module_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match)
+{
+    switch ($route_name) {
+        case 'help.page.blog_module':
+            return '<p>' . t('This is the Blog Module that allows Admins and Editors to manage blog posts.') . '</p>';
+    }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function blog_module_form_node_blog_post_edit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+    // Add a "Preview" button to the form.
+    $form['actions']['preview'] = [
+        '#type' => 'submit',
+        '#value' => t('Preview'),
+        '#submit' => ['blog_module_blog_post_preview_submit'],
+        '#weight' => 10,
+    ];
+}
+
+/**
+ * Custom submit handler for the "Preview" button.
+ */
+function blog_module_blog_post_preview_submit($form, \Drupal\Core\Form\FormStateInterface $form_state)
+{
+    // Get the node ID.
+    $node = $form_state->getFormObject()->getEntity();
+    $node_id = $node->id();
+
+    // Redirect to the custom preview page.
+    $form_state->setRedirect('blog_module.preview', ['node' => $node_id]);
+}
+
+
+

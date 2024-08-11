@@ -1,0 +1,11 @@
+name: "Blog Module"
+type: module
+description: "A custom module for managing blog posts with custom workflows."
+core_version_requirement: ^10
+package: Custom
+dependencies:
+  - drupal:node
+  - drupal:image
+  - drupal:ckeditor
+  - drupal:workflow
+  - drupal:content_moderation

@@ -1,0 +1,40 @@
+{# page.html.twig #}
+{# 
+  Template for the page layout. 
+  - `{{ page.header }}`: Renders the header region.
+  - `{{ page.content }}`: Renders the main content region.
+  - `{{ page.sidebar }}`: Renders the sidebar region.
+  - `{{ page.footer }}`: Renders the footer region.
+#}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {{ html_head }}
+  {{ head }}
+  <title>{{ head_title }}</title>
+  {{ css }}
+  {{ js }}
+</head>
+<body class="{{ body_classes }}">
+  <div id="page-wrapper">
+    <header id="header">
+      {{ page.header }}
+    </header>
+    <div id="main-wrapper">
+      <div id="content">
+        {{ page.content }}
+      </div>
+      <aside id="sidebar">
+        {{ page.sidebar }}
+      </aside>
+    </div>
+    <footer id="footer">
+      {{ page.footer }}
+    </footer>
+  </div>
+  {{ scripts }}
+</body>
+</html>
